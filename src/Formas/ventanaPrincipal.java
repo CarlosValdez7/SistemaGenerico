@@ -166,7 +166,7 @@ public class ventanaPrincipal extends javax.swing.JFrame {
             estadoVenta = "COTIZACION";
         } else if (estado.equals("deudas")) {
             //Estado del pago en deuda
-            estadoServicio="and estadoPago='ABONO' or estadoPago='PENDIENTE'";
+            estadoServicio = "and estadoPago='ABONO' or estadoPago='PENDIENTE'";
         }
         a.tablaOrdenes(modelo, estadoVenta, estadoServicio);
     }
@@ -239,6 +239,44 @@ public class ventanaPrincipal extends javax.swing.JFrame {
         txtExistencias.setText("0");
     }
 
+    int i = 0;
+    String cant = "1";
+    int ren;
+
+    public void busqueda() {
+        ren = -1;
+        DefaultTableModel modelo = (DefaultTableModel) tablaVenta.getModel();
+
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            if ((modelo.getValueAt(i, 0).equals(txtCodBar.getText()))) {
+                ren = i;
+            }
+        }
+    }
+
+    private void agregarArticulo() {
+        if (i == 0) {
+            limpiar(tablaVenta);
+            i = i + 1;
+        }
+        busqueda();
+        DefaultTableModel modelo = (DefaultTableModel) tablaVenta.getModel();
+        //String cantidad = JOptionPane.showInputDialog("Numero de articulos", cant);
+        int cantidad = 1;
+        if (ren == -1) {
+            u.TabVenta(modelo, txtCodBar.getText(), cantidad);
+        } else {
+            int cant = Integer.parseInt(modelo.getValueAt(ren, 2) + "");
+            cant++;
+            modelo.setValueAt(cant, ren, 2);
+
+            float precio = Float.parseFloat(modelo.getValueAt(ren, 3) + "");
+            modelo.setValueAt(df.format(cant * precio), ren, 4);
+        }
+        sumaVenta();
+        txtCodBar.setText("");
+    }
+
     public void limpiarVenta() {
         limpiar(tablaVenta);
         txtSub.setText("0.0");
@@ -256,7 +294,6 @@ public class ventanaPrincipal extends javax.swing.JFrame {
         tDire.setText("-");
         estadoImpuesto = "N";
     }
-
 
     public void calcularExistencias() {
         DefaultTableModel modelo = (DefaultTableModel) tablaServ.getModel();
@@ -288,7 +325,7 @@ public class ventanaPrincipal extends javax.swing.JFrame {
         for (int i = 0; i < modelo.getRowCount(); i++) {
             total = total + Float.parseFloat(modelo.getValueAt(i, 4) + "");
         }
-        txtTotal.setText(df.format(total * 1.16));
+        txtTotal.setText(df.format(total));
     }
 
     public void sumaReportes() {
@@ -334,13 +371,11 @@ public class ventanaPrincipal extends javax.swing.JFrame {
                     + "CHEQUE:         $0.00\n";
         }
 
-
         if (tipoPago.equals("CHEQUE")) {
             pagos = "EFECTIVO:       $0.00\n"
                     + "TARJETA:        $0.00\n"
                     + "CHEQUE:         $" + efectivo;
         }
-
 
         DefaultTableModel modelo = (DefaultTableModel) tablaVenta.getModel();
 
@@ -355,7 +390,6 @@ public class ventanaPrincipal extends javax.swing.JFrame {
         String horaTicket = hora.format(cal.getTime());
 
         //  ven = new Venta();
-
         String nombre = tNombre.getText();
         if (status.equals("COMPLETO")) {
 
@@ -363,8 +397,8 @@ public class ventanaPrincipal extends javax.swing.JFrame {
                     tipoPago, estadoPago, factu, entregado, labelUsuarioLog.getText(),
                     txtSub.getText(), txtDescuento.getText(), txtImpuestos.getText());
 
-            String tic =
-                    "         MEGAPUBLICIDAD\n"
+            String tic
+                    = "         MEGAPUBLICIDAD\n"
                     + "       DUCJ68TT22GM7\n\n"
                     + "Av. Juan Escutia 134-A \n"
                     + "Zona Centro\n"
@@ -386,13 +420,14 @@ public class ventanaPrincipal extends javax.swing.JFrame {
                 float can = Float.parseFloat(tablaVenta.getValueAt(i, 3) + "");
                 String pu = tablaVenta.getValueAt(i, 4) + "";
                 String tot = tablaVenta.getValueAt(i, 5) + "";
-                tic +=
-                        cod + "   " + prod + "\n"
+                tic
+                        += cod + "   " + prod + "\n"
                         + "         " + can + "\t" + pu + "\t" + tot + "\n";
                 totArt += can;
             }
 
-            tic += //"\nA PAGAR:\t" + "$" + labelTotal.getText() + "\n"
+            tic
+                    += //"\nA PAGAR:\t" + "$" + labelTotal.getText() + "\n"
                     //+ "\tDESCUENTO:\t" + lblDesc.getText() + "\n"
                     "\nSUBTOTAL:\t" + "$" + txtSub.getText() + "\n"
                     + "IMPUESTOS:\t" + "$" + txtImpuestos.getText() + "\n"
@@ -420,7 +455,6 @@ public class ventanaPrincipal extends javax.swing.JFrame {
                         tNombre.getText(), tRepre.getText(), tRFC.getText(), tDire.getText(), tEmail.getText(),
                         txtImpuestos.getText(), txtSub.getText(), txtDescuento.getText(), labelUsuarioLog.getText());
 
-
             } catch (DocumentException ex) {
                 Logger.getLogger(ventanaPrincipal.class
                         .getName()).log(Level.SEVERE, null, ex);
@@ -443,8 +477,8 @@ public class ventanaPrincipal extends javax.swing.JFrame {
                     tipoPago, estadoPago, factu, entregado, labelUsuarioLog.getText(),
                     txtSub.getText(), txtDescuento.getText(), txtImpuestos.getText());
 
-            String tic =
-                    "           ANTICIPO               \n"
+            String tic
+                    = "           ANTICIPO               \n"
                     + "       MEGAPUBLICIDAD           \n"
                     + "       DUCJ68TT22GM7          \n\n"
                     + "Av. Juan Escutia 134-A          \n"
@@ -467,14 +501,15 @@ public class ventanaPrincipal extends javax.swing.JFrame {
                 float can = Float.parseFloat(tablaVenta.getValueAt(i, 3) + "");
                 String pu = tablaVenta.getValueAt(i, 4) + "";
                 String tot = tablaVenta.getValueAt(i, 5) + "";
-                tic +=
-                        cod + "   " + prod + "\n"
+                tic
+                        += cod + "   " + prod + "\n"
                         + "         " + can + "\t" + pu + "\t" + tot + "\n";
                 totArt += can;
 
             }
 
-            tic += //"\nTOTAL:\t\t" + "$" + labelTotal.getText() + "\n"
+            tic
+                    += //"\nTOTAL:\t\t" + "$" + labelTotal.getText() + "\n"
                     //  + "\tDESCUENTO:\t" + lblDesc.getText() + "\n"
                     "\nSUBTOTAL:\t" + "$" + txtSub.getText() + "\n"
                     + "IMPUESTOS:\t" + "$" + txtImpuestos.getText() + "\n"
@@ -524,8 +559,6 @@ public class ventanaPrincipal extends javax.swing.JFrame {
         }
 
         // reiniciar();
-
-
     }
 
     /**
@@ -633,6 +666,9 @@ public class ventanaPrincipal extends javax.swing.JFrame {
         txtTotal = new javax.swing.JTextField();
         jButton46 = new javax.swing.JButton();
         jButton51 = new javax.swing.JButton();
+        jLabel25 = new javax.swing.JLabel();
+        txtCodBar = new javax.swing.JTextField();
+        jButton25 = new javax.swing.JButton();
         panelClientes = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         txtNumCliente = new javax.swing.JTextField();
@@ -1589,6 +1625,21 @@ public class ventanaPrincipal extends javax.swing.JFrame {
             }
         });
 
+        jLabel25.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/codigobarras.png"))); // NOI18N
+
+        txtCodBar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtCodBarKeyPressed(evt);
+            }
+        });
+
+        jButton25.setText("Agregar");
+        jButton25.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton25ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelVentasLayout = new javax.swing.GroupLayout(panelVentas);
         panelVentas.setLayout(panelVentasLayout);
         panelVentasLayout.setHorizontalGroup(
@@ -1606,7 +1657,13 @@ public class ventanaPrincipal extends javax.swing.JFrame {
                             .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jPanel22, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(panelVentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelVentasLayout.createSequentialGroup()
+                                .addGroup(panelVentasLayout.createSequentialGroup()
+                                    .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(txtCodBar, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jButton25)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                     .addComponent(jLabel32)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(labelTema)
@@ -1631,23 +1688,25 @@ public class ventanaPrincipal extends javax.swing.JFrame {
                 .addGroup(panelVentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton16)
                     .addComponent(jButton46))
-                .addGroup(panelVentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelVentasLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelVentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(panelVentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(panelVentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel32)
-                            .addComponent(labelTema)))
-                    .addGroup(panelVentasLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(panelVentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton11)
+                            .addComponent(jButton24)
+                            .addComponent(jButton26))
+                        .addComponent(jButton51))
+                    .addGroup(panelVentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(panelVentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtCodBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton25)
                             .addGroup(panelVentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jButton11)
-                                .addComponent(jButton24)
-                                .addComponent(jButton26))
-                            .addComponent(jButton51))))
-                .addGap(11, 11, 11)
-                .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(87, 87, 87)
+                                .addComponent(jLabel32)
+                                .addComponent(labelTema)))))
+                .addGap(9, 9, 9)
+                .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel22, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2318,7 +2377,7 @@ public class ventanaPrincipal extends javax.swing.JFrame {
         });
 
         jButton27.setBackground(new java.awt.Color(239, 231, 101));
-        jButton27.setText("Cotizaciones");
+        jButton27.setText("Facturación");
         jButton27.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton27.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -3288,7 +3347,7 @@ public class ventanaPrincipal extends javax.swing.JFrame {
         }
     }
 
-/*    public void cambiarPrecios2(String estado) {
+    /*    public void cambiarPrecios2(String estado) {
         DefaultTableModel modelo = (DefaultTableModel) tablaVenta1.getModel();
         double total = 0, pu = 0;
         if (estado.equals("S")) {
@@ -3311,7 +3370,7 @@ public class ventanaPrincipal extends javax.swing.JFrame {
             }
         }
     }
-*/
+     */
     public void desglozarImpuestosVenta() {
         try {
             double impuestos = 0.00, total = 0.00, simp = 0.0;
@@ -3335,17 +3394,24 @@ public class ventanaPrincipal extends javax.swing.JFrame {
         double impuestos = 0.00, total = 0.00, simp = 0.0;
         String sub = "", imp = "";
 
-        total = Double.parseDouble(txtTotal.getText());
-        simp = total / 1.16;
-        impuestos = simp * .16;
+        if (estadoImpuesto.equals("N")) {
+            total = Double.parseDouble(txtTotal.getText());
+            simp = total / 1.16;
+            impuestos = simp * .16;
 
-        sub = df.format(simp);
-        imp = df.format(impuestos);
+            sub = df.format(simp);
+            imp = df.format(impuestos);
 
-        txtSub.setText(sub);
-        txtImpuestos.setText(imp);
+            txtSub.setText(sub);
+            txtImpuestos.setText(imp);
+            estadoImpuesto="S";
+        } else {
+            txtSub.setText("0.0");
+            txtImpuestos.setText("0.0");
+            estadoImpuesto="N";
+        }
 
-        cambiarPrecios(estadoImpuesto);
+        // cambiarPrecios(estadoImpuesto);
     }//GEN-LAST:event_jButton12ActionPerformed
 
     private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
@@ -3512,11 +3578,11 @@ public class ventanaPrincipal extends javax.swing.JFrame {
             } else if (jRadioButton4.isSelected()) {
                 //COTIZACIONES
                 cargarReportes("Fechas", " where v.estado='Cotizacion' and v.fecha='" + f1 + "' ");
-            } else if(jRadioButton5.isSelected()){
+            } else if (jRadioButton5.isSelected()) {
                 //PAGADOS
                 cargarReportes("Fechas", " where v.estadoPago='COMPLETO' and v.fecha='" + f1 + "' ");
             } else {
-                cargarReportes("Fechas"," where v.estadoPago='ABONO' and v.fecha='"+f1+"' ");
+                cargarReportes("Fechas", " where v.estadoPago='ABONO' and v.fecha='" + f1 + "' ");
             }
 
             tipoPDF = "1";
@@ -3546,7 +3612,6 @@ public class ventanaPrincipal extends javax.swing.JFrame {
 
                 Desktop desktop = Desktop.getDesktop();
                 desktop.open(new java.io.File("C:\\Users\\Lenovo\\Documents\\Documentos Sistema\\Reportes\\" + archivo + ".pdf"));
-
 
             }
         } catch (DocumentException ex) {
@@ -3579,7 +3644,7 @@ public class ventanaPrincipal extends javax.swing.JFrame {
         jButton39.setBackground(Color.getColor("FFFFFF"));
         jButton5.setBackground(Color.getColor("FFFFFF"));
         jButton38.setBackground(Color.getColor("FFFFFF"));
-        
+
     }//GEN-LAST:event_jButton14ActionPerformed
     String icono = "1";
     private void jButton42ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton42ActionPerformed
@@ -3636,12 +3701,12 @@ public class ventanaPrincipal extends javax.swing.JFrame {
             } else if (jRadioButton4.isSelected()) {
                 //COTIZACIONES
                 cargarReportes("Fechas", " where v.estado='Cotizacion' and v.fecha between '" + f1 + "' and '" + f2 + "' ");
-            } else if(jRadioButton5.isSelected()) {
+            } else if (jRadioButton5.isSelected()) {
                 //PAGADOS
                 cargarReportes("Fechas", " where v.estadoPago='COMPLETO' and v.fecha between '" + f1 + "' and '" + f2 + "' ");
             } else {
                 //DEUDAS
-                cargarReportes("Fechas", " where v.estadoPago='ABONO' and v.fecha between '"+f1+"' and '"+f2+"' ");
+                cargarReportes("Fechas", " where v.estadoPago='ABONO' and v.fecha between '" + f1 + "' and '" + f2 + "' ");
             }
 
             tipoPDF = "2";
@@ -3701,25 +3766,26 @@ public class ventanaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton46ActionPerformed
 
     public void añadirCliente(String panel) {
-            DefaultTableModel modelo = (DefaultTableModel) tablaClientes.getModel();
-            codC = modelo.getValueAt(tablaClientes.getSelectedRow(), 0) + "";
-            tCliente.setText(modelo.getValueAt(tablaClientes.getSelectedRow(), 0) + "");
-            tNombre.setText(modelo.getValueAt(tablaClientes.getSelectedRow(), 1) + "");
-            tRepre.setText(modelo.getValueAt(tablaClientes.getSelectedRow(), 2) + "");
-            tRFC.setText(modelo.getValueAt(tablaClientes.getSelectedRow(), 3) + "");
-            tDire.setText(modelo.getValueAt(tablaClientes.getSelectedRow(), 4) + "");
-            tEmail.setText(modelo.getValueAt(tablaClientes.getSelectedRow(), 6) + "");
-            tTelefono.setText(modelo.getValueAt(tablaClientes.getSelectedRow(), 7) + "");
+        DefaultTableModel modelo = (DefaultTableModel) tablaClientes.getModel();
+        codC = modelo.getValueAt(tablaClientes.getSelectedRow(), 0) + "";
+        tCliente.setText(modelo.getValueAt(tablaClientes.getSelectedRow(), 0) + "");
+        tNombre.setText(modelo.getValueAt(tablaClientes.getSelectedRow(), 1) + "");
+        tRepre.setText(modelo.getValueAt(tablaClientes.getSelectedRow(), 2) + "");
+        tRFC.setText(modelo.getValueAt(tablaClientes.getSelectedRow(), 3) + "");
+        tDire.setText(modelo.getValueAt(tablaClientes.getSelectedRow(), 4) + "");
+        tEmail.setText(modelo.getValueAt(tablaClientes.getSelectedRow(), 6) + "");
+        tTelefono.setText(modelo.getValueAt(tablaClientes.getSelectedRow(), 7) + "");
 
-            panelClientes.setVisible(false);
-            panelVentas.setVisible(true);
+        panelClientes.setVisible(false);
+        panelVentas.setVisible(true);
     }
 
     private void jButton47ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton47ActionPerformed
         // AÑADIR CLIENTE A LA VENTA/Coti
         añadirCliente(tipoPanel);
     }//GEN-LAST:event_jButton47ActionPerformed
-    String codFac = "", clienteFac = "";    String codTrans = "", clienteTrans = "";
+    String codFac = "", clienteFac = "";
+    String codTrans = "", clienteTrans = "";
     private void jButton51ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton51ActionPerformed
         // articulo rapido
         try {
@@ -3730,11 +3796,11 @@ public class ventanaPrincipal extends javax.swing.JFrame {
                 String cantidad = JOptionPane.showInputDialog(null, "Cantidad:");
 
                 double prec = Double.parseDouble(pu) * Double.parseDouble(cantidad);
-                prec = prec / 1.16;
-                double pu2 = Double.parseDouble(pu) / 1.16;
+
+                double pu2 = Double.parseDouble(pu);
                 modelo.addRow(new Object[]{"0", produ, "-", cantidad, df.format(pu2), df.format(prec)});
                 sumaVenta();
-                desglozarImpuestosVenta();
+                //desglozarImpuestosVenta();
             }
         } catch (Exception e) {
         }
@@ -3804,6 +3870,19 @@ public class ventanaPrincipal extends javax.swing.JFrame {
         sumaReportes();
     }//GEN-LAST:event_jRadioButton10ItemStateChanged
 
+    private void jButton25ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton25ActionPerformed
+        // TODO add your handling code here:
+        agregarArticulo();
+    }//GEN-LAST:event_jButton25ActionPerformed
+
+    private void txtCodBarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodBarKeyPressed
+        // TODO add your handling code here:
+        char car = (char) evt.getKeyCode();
+        if (car == evt.VK_ENTER) {
+            this.jButton25ActionPerformed(null);
+        }
+    }//GEN-LAST:event_txtCodBarKeyPressed
+
     /**
      * @param args the command line arguments
      */
@@ -3818,9 +3897,6 @@ public class ventanaPrincipal extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
-
-
-
 
                 }
             }
@@ -3840,7 +3916,7 @@ public class ventanaPrincipal extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        /*java.awt.EventQueue.invokeLater(new Runnable() {
+ /*java.awt.EventQueue.invokeLater(new Runnable() {
          public void run() {
          new ventanaPrincipal().setVisible(true);
          }
@@ -3876,6 +3952,7 @@ public class ventanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton jButton22;
     private javax.swing.JButton jButton23;
     private javax.swing.JButton jButton24;
+    private javax.swing.JButton jButton25;
     private javax.swing.JButton jButton26;
     private javax.swing.JButton jButton27;
     private javax.swing.JButton jButton28;
@@ -3922,6 +3999,7 @@ public class ventanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
@@ -4030,6 +4108,7 @@ public class ventanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JTextField txtBusquedaProductos;
     private javax.swing.JTextField txtCE;
     private javax.swing.JTextField txtCP;
+    private javax.swing.JTextField txtCodBar;
     private javax.swing.JTextField txtContra;
     private javax.swing.JTextField txtCupon;
     private javax.swing.JTextField txtCuponDesc;

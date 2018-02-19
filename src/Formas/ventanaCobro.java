@@ -277,6 +277,7 @@ public class ventanaCobro extends javax.swing.JFrame {
         pEfec.setForeground(new java.awt.Color(255, 255, 255));
         pEfec.setSelected(true);
         pEfec.setText("Efectivo");
+        pEfec.setOpaque(false);
         pEfec.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 pEfecActionPerformed(evt);
@@ -286,19 +287,23 @@ public class ventanaCobro extends javax.swing.JFrame {
         buttonGroup1.add(pTar);
         pTar.setForeground(new java.awt.Color(255, 255, 255));
         pTar.setText("Tarjeta");
+        pTar.setOpaque(false);
 
         buttonGroup2.add(pAbon);
         pAbon.setForeground(new java.awt.Color(255, 255, 255));
         pAbon.setText("Credito");
+        pAbon.setOpaque(false);
 
         buttonGroup2.add(pComp);
         pComp.setForeground(new java.awt.Color(255, 255, 255));
         pComp.setSelected(true);
         pComp.setText("Pago Completo");
+        pComp.setOpaque(false);
 
         buttonGroup1.add(pCheq);
         pCheq.setForeground(new java.awt.Color(255, 255, 255));
         pCheq.setText("Cheque");
+        pCheq.setOpaque(false);
         pCheq.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 pCheqActionPerformed(evt);
@@ -308,6 +313,7 @@ public class ventanaCobro extends javax.swing.JFrame {
         buttonGroup1.add(jRadioButton2);
         jRadioButton2.setForeground(new java.awt.Color(255, 255, 255));
         jRadioButton2.setText("Transferencia");
+        jRadioButton2.setOpaque(false);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -429,10 +435,12 @@ public class ventanaCobro extends javax.swing.JFrame {
 
         factura.setForeground(new java.awt.Color(255, 255, 255));
         factura.setText("Facturación");
+        factura.setOpaque(false);
         jPanel1.add(factura, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 320, -1, -1));
 
         rEntregado.setForeground(new java.awt.Color(255, 255, 255));
         rEntregado.setText("Entregado");
+        rEntregado.setOpaque(false);
         jPanel1.add(rEntregado, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 340, -1, -1));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 610, 373));

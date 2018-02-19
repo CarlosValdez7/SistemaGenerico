@@ -523,4 +523,43 @@ public class Generales {
             JOptionPane.showMessageDialog(null, "Error en  eliminar cat." + ex);
         }
     }
+  
+   public void TabVenta(DefaultTableModel modelo2, String cod, int cant) {
+
+        try {
+
+            String sql = "SELECT id,nombre,precio from productos where id='" + cod + "'";
+            CallableStatement cmd = cn.prepareCall(sql);
+            ResultSet rs = cmd.executeQuery();
+
+            if (rs.next()) {
+                String id = rs.getString("id");
+                String nom = rs.getString("nombre");
+                float precio = rs.getFloat("precio");
+                float total = precio * cant;
+
+                if (cant > 0) {
+                    Object[] datos = {
+                        id,
+                        nom,
+                        cant,
+                        precio,
+                        total
+                    };
+
+                    modelo2.addRow(datos);
+
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Codigo incorrecto.");
+                cmd.close();
+                // cn.close();
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "No se aceptan letras. \n Introduce un ID correcto.");
+            // System.out.println("Indica la cantidad del producto"+ex.getMessage());}
+        }
+
+    }
+  
 }

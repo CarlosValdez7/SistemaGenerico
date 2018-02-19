@@ -148,7 +148,8 @@ public class ventanaLogin extends javax.swing.JFrame {
         String tipo = jComboBox1.getSelectedItem() + "";
         
         if(pass.equals(u.contra(pass, tipo))){
-            hilo.start();
+            hola();
+            //hilo.start();
         }
         else {
             JOptionPane.showMessageDialog(null, "Contraseña incorrecta.");
